@@ -1,7 +1,3 @@
-# -
-一键认证校园网
-
-
 校园网认证工具
 这是一个用于自动进行校园网认证的Java工具。通过定时任务或手动运行，程序可以自动获取本机IP地址并发送认证请求，确保网络连接正常。
 
@@ -32,22 +28,21 @@ settings.properties：配置文件，用于设置认证参数。
 2. 配置文件说明
 编辑 settings.properties 文件，填写以下参数：
 
-properties
-复制
+
+
 # 校园网认证URL
 auth.url=http://10.0.100.3:801/eportal/portal/login
 
 # 认证参数
 callback=dr1003
 login_method=1
-user_account=LTB20220101120  # 替换为你的账号
+user_account=,0,LTB20220101120@unicom  # 替换为你的账号
 user_password=200116                   # 替换为你的密码
 wlan_user_mac=000000000000             # 替换为你的MAC地址（可选）
 js_version=4.2.1
 terminal_type=1
 lang=zh-cn
 v=3869
-
 3. 运行程序
 方法一：手动运行
 双击 run_auth.bat 文件，程序会自动运行并输出认证结果。
@@ -55,6 +50,17 @@ v=3869
 如果认证成功，控制台会显示 认证响应 的内容。
 
 方法二：定时运行（推荐）
+打开Windows任务计划程序（taskschd.msc）。
+
+创建一个新任务：
+
+触发器：每天6:30。
+
+操作：启动程序，选择 run_auth.bat 文件。
+
+保存任务，程序会在每天6:30自动运行。
+
+方法三:使用 schtasks 命令
 
 1.用管理员权限打开cmd
 
@@ -65,6 +71,37 @@ schtasks /create /tn "校园网自动认证任务" /tr "C:\Users\35175\Desktop\�
 注： C:\Users\35175\Desktop\校园网自动认证程序\run_auth.bat 这个是run_auth.bat的绝对路径
 
 3.设置完后可以打开任务计划程序看到有一个校园网自动认证的任务出现在其中
+
+
+项目结构
+
+CampusAuth/
+├── campus-network-auth-1.0-jar-with-dependencies.jar  # 可执行JAR文件
+├── run_auth.bat                                      # 批处理文件
+├── settings.properties                               # 配置文件
+└── README.md                                        # 说明文档
+技术细节
+1. 自动获取本机IP地址
+程序会优先获取网线连接的IPv4地址，跳过虚拟接口（如Docker、VMware等）。
+
+2. 动态路径支持
+批处理文件使用 %~dp0 动态获取当前目录，确保JAR文件和配置文件的路径正确。
+
+3. 认证请求
+程序通过HTTP GET请求发送认证信息，请求URL格式如下：
+
+
+http://10.0.100.3:801/eportal/portal/login?
+callback=dr1003&
+login_method=1&
+user_account=,0,LTB20220101120@unicom&
+user_password=200116&
+wlan_user_ip=10.7.144.159&
+wlan_user_mac=000000000000&
+jsVersion=4.2.1&
+terminal_type=1&
+lang=zh-cn&
+v=3869
 
 
 常见问题
@@ -91,7 +128,8 @@ schtasks /create /tn "校园网自动认证任务" /tr "C:\Users\35175\Desktop\�
 
 邮箱：2932419272@qq.com
 
-GitHub: https://github.com/YinZiBenRun
+GitHub: [YourGitHubProfile](https://github.com/YinZiBenRun)
+
 致谢
 感谢以下开源项目：
 
@@ -100,8 +138,5 @@ Apache HttpClient：用于发送HTTP请求。
 Maven：用于项目构建和依赖管理。
 
 
-
  ----------本项目基于长沙学院校园网构建，如要使用请在使用前根据所属单位自行修改
-
-
 
